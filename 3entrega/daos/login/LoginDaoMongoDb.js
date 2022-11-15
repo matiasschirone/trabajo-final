@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const ContenedorMongodb = require('../../contenedores/ContenedorMongoDb');
-const mongoConnect = require('../../utils/mongoconnect');
+const ContenedorMongoDB = require('../../contenedores/ContenedorMongoDb.js');
+const mongoConnect = require('../../utils/mongoconnect.js');
 
 const loginsCollections = "logins";
 
@@ -11,7 +11,7 @@ const LoginSchema = new mongoose.Schema({
 
 const logins = mongoose.model(loginsCollections, LoginSchema);
 
-class LoginDaoMongoDB extends ContenedorMongodb {
+class LoginDaoMongoDB extends ContenedorMongoDB {
 	constructor() {
 		super(mongoConnect, logins);
 	}

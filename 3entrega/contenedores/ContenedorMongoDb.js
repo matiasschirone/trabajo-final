@@ -8,7 +8,7 @@ class ContenedorMongoDB {
 	}
 
 	async connexion() {
-		await mongoose.connect(this.url, {
+		mongoose.connect(this.url, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});

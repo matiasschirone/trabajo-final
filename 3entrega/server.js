@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
+/*app.use(session({
     Mongostore: MongoStore.create({ mongoUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/?retryWrites=true&w=majority`, mongoOptions: mongoConfig }),
     client: 'mongodb',
     secret: 'shhhhhhhhhhhhhhhhhhhhh',
@@ -47,7 +47,27 @@ app.use(session({
     cookie: {
         maxAge: 50000
     }
-}))
+}))*/
+app.use(
+	session({
+		store: MongoStore.create({
+			mongoUrl: process.env.MONGODB_URL,
+			mongoOptions: {
+				useNewUrlParser: true,
+				useUnifiedTopology: true
+			}
+		}),
+		secret: "shhhhhhhhhhhhhhhhhhhhh",
+		resave: false,
+		rolling: true,
+		saveUninitialized: false,
+		cookie: {
+			httpOnly: false,
+			secure: false,
+			maxAge: 90000
+		}
+	})
+);
 
 app.use(morgan("dev"));
 
