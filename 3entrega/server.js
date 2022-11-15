@@ -6,8 +6,8 @@ const morgan = require('morgan');
 const express = require("express");
 
 const { Router } = express;
-const MongoStore = require("connect-mongo");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const cp = require("cookie-parser");
 const { fork } = require("child_process");
 const numCPUs = require("os").cpus().length;
@@ -37,6 +37,8 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+app.set('view engine', 'ejs');
+
 /*app.use(session({
     Mongostore: MongoStore.create({ mongoUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/?retryWrites=true&w=majority`, mongoOptions: mongoConfig }),
     client: 'mongodb',
@@ -48,15 +50,9 @@ app.use(express.urlencoded({ extended: true }));
         maxAge: 50000
     }
 }))*/
-app.use(
+/*app.use(
 	session({
-		store: MongoStore.create({
-			mongoUrl: process.env.MONGODB_URL,
-			mongoOptions: {
-				useNewUrlParser: true,
-				useUnifiedTopology: true
-			}
-		}),
+		store: MongoStore.create({mongoUrl: process.env.MONGO_URL, mongoOptions: mongoConfig}),
 		secret: "shhhhhhhhhhhhhhhhhhhhh",
 		resave: false,
 		rolling: true,
@@ -67,7 +63,7 @@ app.use(
 			maxAge: 90000
 		}
 	})
-);
+);*/
 
 app.use(morgan("dev"));
 
