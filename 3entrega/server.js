@@ -1,4 +1,7 @@
-const dotenv = require('dotenv').config();
+const dontenv = require('dotenv');
+dontenv.config();
+
+const morgan = require('morgan');
 
 const express = require("express");
 
@@ -10,20 +13,11 @@ const { fork } = require("child_process");
 const numCPUs = require("os").cpus().length;
 
 
-
-//const cp = require("cookie-parser");
-//const { fork } = require("child_process");
-const numCpus = require("os").cpus().length;
-
 const routerProductos = require('./routes/productos.route.js');
 const routerCarrito = require('./routes/carrito.route.js');
 
+
 const app = express();
-
-app.use(cp());
-const checkAuthentication = require('./utils/checkAuthentication.js').default;
-const passport = require('./utils/passportMiddleware.js');
-
 
 app.use(express.json());
 app.use(express.static("public"));
@@ -34,31 +28,26 @@ app.use(cp());
 const checkAuthentication = require('./utils/checkAuthentication.js')
 const passport = require('./utils/passportMiddleware.js')
 
+const mongoConfig = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}
 
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(
-	session({
-		store: MongoStore.create({
-			mongoUrl: process.env.MONGO_URL,
-			mongoOptions: {
-				useNewUrlParser: true,
-				useUnifiedTopology: true
-			}
-		}),
-		secret: process.env.MONGODB_SECRETO,
-		resave: false,
-		rolling: true,
-		saveUninitialized: false,
-		cookie: {
-			httpOnly: false,
-			secure: false,
-			maxAge: 90000
-		}
-	})
-);
+app.use(session({
+    Mongostore: MongoStore.create({ mongoUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}/?retryWrites=true&w=majority`, mongoOptions: mongoConfig }),
+    client: 'mongodb',
+    secret: 'shhhhhhhhhhhhhhhhhhhhh',
+    resave: false,
+    saveUninitialized: false,
+    rolling: true,
+    cookie: {
+        maxAge: 50000
+    }
+}))
 
 app.use(morgan("dev"));
 
@@ -68,7 +57,7 @@ app.use(passport.session());
 
 // página de inicio, no dejar si no está logeado
 app.get("/", checkAuthentication, async (req, res) => {
-	const productos = await Productos.getAll();
+	const productos = await productos.getAll();
 	res.render("index", { productos });
 });
 
@@ -149,7 +138,8 @@ app.use((req, res, next) => {
 	res.sendStatus("404");
 });
 
-const connectedServer = httpServer.listen( process.env.PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${connectedServer.address().port}`)
-})
-connectedServer.on('error', error => console.log(`Error en servidor ${error}`))
+
+app.listen(process.env.PORT, err => {
+	if (err) throw err;
+	console.log(`Server running on port ${process.env.PORT}`);
+});

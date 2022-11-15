@@ -1,4 +1,4 @@
-let productosDao
+/*let productosDao
 let carritoDao
 
 switch ('json') {
@@ -33,4 +33,15 @@ switch ('json') {
         break;
 }
 
-module.exports = { productosDao, carritoDao }
+module.exports = { productosDao, carritoDao }*/
+require("dotenv").config();
+
+const CarritoDaoMongoDB = require("./carritos/CarritoDaoMongoDb.js");
+const ProductoDaoMongoDB = require("./productos/ProductoDaoMongoDb.js");
+const LoginDaoMongoDB = require("./login/LoginDaoMongoDb.js");
+
+
+// exports
+exports.Carrito = CarritoDaoMongoDB;
+exports.Producto = ProductoDaoMongoDB;
+exports.Login = LoginDaoMongoDB;
